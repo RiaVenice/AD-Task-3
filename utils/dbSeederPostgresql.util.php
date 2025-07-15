@@ -47,14 +47,14 @@ switch ($table) {
         $data = require DUMMIES_PATH . '/meetings.staticData.php';
         $stmt = $pdo->prepare("
             INSERT INTO meetings (title, description, scheduled_at, created_by)
-            VALUES (:title, :description, :scheduled_at, :created_by)
+            VALUES (:title, :description, :scheduled_at, (SELECT id FROM users WHERE username = :created_by_username))
         ");
         foreach ($data as $m) {
             $stmt->execute([
-                ':title'        => $m['title'],
-                ':description'  => $m['description'],
-                ':scheduled_at' => $m['scheduled_at'],
-                ':created_by'   => $m['created_by'],
+                ':title'                => $m['title'],
+                ':description'          => $m['description'],
+                ':scheduled_at'         => $m['scheduled_at'],
+                ':created_by_username'  => $m['created_by_username'],
             ]);
         }
         echo "Meetings seeded.\n";
@@ -65,16 +65,20 @@ switch ($table) {
         $data = require DUMMIES_PATH . '/tasks.staticData.php';
         $stmt = $pdo->prepare("
             INSERT INTO tasks (meeting_id, assigned_to, title, description, status, due_date)
-            VALUES (:meeting_id, :assigned_to, :title, :description, :status, :due_date)
+            VALUES (
+                (SELECT id FROM meetings WHERE title = :meeting_title),
+                (SELECT id FROM users WHERE username = :assigned_to_username),
+                :title, :description, :status, :due_date
+            )
         ");
         foreach ($data as $t) {
             $stmt->execute([
-                ':meeting_id'  => $t['meeting_id'],
-                ':assigned_to' => $t['assigned_to'],
-                ':title'       => $t['title'],
-                ':description' => $t['description'],
-                ':status'      => $t['status'],
-                ':due_date'    => $t['due_date'],
+                ':meeting_title'        => $t['meeting_title'],
+                ':assigned_to_username' => $t['assigned_to_username'],
+                ':title'                => $t['title'],
+                ':description'          => $t['description'],
+                ':status'               => $t['status'],
+                ':due_date'             => $t['due_date'],
             ]);
         }
         echo "Tasks seeded.\n";
@@ -85,13 +89,17 @@ switch ($table) {
         $data = require DUMMIES_PATH . '/meeting_users.staticData.php';
         $stmt = $pdo->prepare("
             INSERT INTO meeting_users (meeting_id, user_id, role)
-            VALUES (:meeting_id, :user_id, :role)
+            VALUES (
+                (SELECT id FROM meetings WHERE title = :meeting_title),
+                (SELECT id FROM users WHERE username = :username),
+                :role
+            )
         ");
         foreach ($data as $mu) {
             $stmt->execute([
-                ':meeting_id'  => $mu['meeting_id'],
-                ':user_id'     => $mu['user_id'],
-                ':role'        => $mu['role'],
+                ':meeting_title' => $mu['meeting_title'],
+                ':username'      => $mu['username'],
+                ':role'          => $mu['role'],
             ]);
         }
         echo "Meeting users seeded.\n";
