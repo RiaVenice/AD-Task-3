@@ -2,17 +2,15 @@
 
 return [
     [
-        'id' => '390b1a58-1a5c-4fcb-b230-ab4aa16aa3e1',
         'title' => 'Hirono Event',
         'description' => 'Creation of new designs for New Hirono Series',
         'scheduled_at' => '2025-07-09 10:00:00',
-        'created_by' => '2fb5d1de-425c-4ee3-a8ec-84c44b650796'
+        'created_by_username' => 'airven'  // Use username to lookup user ID
     ],
     [
-        'id' => 'e8ba0fcf-e871-4564-b67d-b2c073197346',
         'title' => 'Design Review',
         'description' => 'Feedback on fellow customers',
         'scheduled_at' => '2025-07-10 15:00:00',
-        'created_by' => '66892bd6-2c31-4497-a382-3a76784f42b0'
+        'created_by_username' => '1ensh1'  // Use username to lookup user ID
     ],
 ];
