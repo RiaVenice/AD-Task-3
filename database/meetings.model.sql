@@ -1,10 +1,8 @@
 CREATE TABLE IF NOT EXISTS meetings (
-    meeting_id SERIAL PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
+    id uuid NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(256) NOT NULL,
     description TEXT,
-    meeting_date DATE NOT NULL,
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
-    location VARCHAR(255)
-
+    scheduled_at TIMESTAMP NOT NULL,
+    created_by uuid REFERENCES public."users" (id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
