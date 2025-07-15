@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require 'vendor/autoload.php';
 require 'bootstrap.php';
-require_once __DIR__ . '/envSetter.util.php';
+require_once UTILS_PATH . '/envSetter.util.php';
 
 // Adding the database host and connecting
 $host     = $pgConfig['host'];
@@ -23,8 +23,8 @@ $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
 echo "Dropping old tables…\n";
 foreach ([
     'users',
-    'project_users',
-    'meetingusers',
+    'meetings',
+    'meeting_users',
     'tasks',
 ] as $table) {
     // Use IF EXISTS so it won’t error if the table is already gone
@@ -35,8 +35,8 @@ foreach ([
 // Migrating new tables
 $dbFiles = [
     'users.model.sql',
-    'project_users.model.sql',
-    'meetingusers.model.sql',
+    'meetings.model.sql',
+    'meeting_users.model.sql',
     'tasks.model.sql'
 ];
 
