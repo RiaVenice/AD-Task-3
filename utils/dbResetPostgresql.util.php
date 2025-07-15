@@ -1,40 +1,52 @@
 <?php
-
+// Set up requirements
 declare(strict_types=1);
 
-// 1) Composer autoload
 require 'vendor/autoload.php';
-
-// 2) Composer bootstrap
 require 'bootstrap.php';
+require_once UTILS_PATH . '/envSetter.util.php';
 
-// 3) envSetter
-require_once __DIR__ . '/envSetter.util.php';
+// Adding the database host and connecting
+$host     = $pgConfig['host'];
+$port     = $pgConfig['port'];
+$username = $pgConfig['user'];
+$password = $pgConfig['pass'];
+$dbname   = $pgConfig['db'];
 
-// ——— Connect to PostgreSQL ———
+// Connect to PostgreSQL
 $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
 $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 ]);
 
-// Just indicator it was working
-echo "Applying schema from database/users.model.sql…\n";
+// Automatically generate the database tables
+$dbFiles = [
+    'users.model.sql',
+    'meetings.model.sql',
+    'meeting_users.model.sql',
+    'tasks.model.sql'
+];
 
-$sql = file_get_contents('database/users.model.sql');
+foreach ($dbFiles as $dbFile) {
+    // Indicator if it was working
+    echo "Applying schema from database/{$dbFile}…\n";
+    $sql = file_get_contents("database/{$dbFile}");
 
-// Another indicator but for failed creation
-if ($sql === false) {
-  throw new RuntimeException("Could not read database/users.model.sql");
-} else {
-    echo "Creation Success from the database/users.model.sql";
+    // Another indicator but for failed creation
+    if ($sql === false) {
+        throw new RuntimeException("Could not read database/{$dbFile}");
+    }
+
+    // If your model.sql contains a working command it will be executed
+    $pdo->exec($sql);
+    echo "Creation success from the {$dbFile}\n";
 }
 
-// If your model.sql contains a working command it will be executed
-$pdo->exec($sql);
-
+// Clean the tables
 echo "Truncating tables…\n";
-foreach (['users'] as $table) {
-  $pdo->exec("TRUNCATE TABLE {$table} RESTART IDENTITY CASCADE;");
+foreach (['users', 'meetings', 'meeting_users', 'tasks'] as $table) {
+    $pdo->exec("TRUNCATE TABLE {$table} RESTART IDENTITY CASCADE;");
 }
+echo "Tables successfully truncated.\n";
 
 ?>
