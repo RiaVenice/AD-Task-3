@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require 'vendor/autoload.php';
 require 'bootstrap.php';
-require_once __DIR__ . '/envSetter.util.php';
+require_once UTILS_PATH . '/envSetter.util.php';
 
 $host     = $pgConfig['host'];
 $port     = $pgConfig['port'];
@@ -42,19 +42,19 @@ switch ($table) {
         echo "Users seeded.\n";
         break;
 
-    case 'project_users':
+    case 'meetings':
         echo "Seeding meetings…\n";
-        $data = require DUMMIES_PATH . '/project_users.staticData.php';
+        $data = require DUMMIES_PATH . '/meetings.staticData.php';
         $stmt = $pdo->prepare("
-            INSERT INTO project_users (title, description, meeting_date, location)
-            VALUES (:title, :description, :meeting_date, :location)
+            INSERT INTO meetings (title, description, scheduled_at, created_by)
+            VALUES (:title, :description, :scheduled_at, :created_by)
         ");
         foreach ($data as $m) {
             $stmt->execute([
                 ':title'        => $m['title'],
                 ':description'  => $m['description'],
-                ':meeting_date' => $m['meeting_date'],
-                ':location'   => $m['location'],
+                ':scheduled_at' => $m['scheduled_at'],
+                ':created_by'   => $m['created_by'],
             ]);
         }
         echo "Meetings seeded.\n";
@@ -64,13 +64,13 @@ switch ($table) {
         echo "Seeding tasks…\n";
         $data = require DUMMIES_PATH . '/tasks.staticData.php';
         $stmt = $pdo->prepare("
-            INSERT INTO tasks (assigned_to, users,title, description, status, due_date)
-            VALUES (:assigned_to, :users, :title, :description, :status, :due_date)
+            INSERT INTO tasks (meeting_id, assigned_to, title, description, status, due_date)
+            VALUES (:meeting_id, :assigned_to, :title, :description, :status, :due_date)
         ");
         foreach ($data as $t) {
             $stmt->execute([
+                ':meeting_id'  => $t['meeting_id'],
                 ':assigned_to' => $t['assigned_to'],
-                ':users' => $t['users'],
                 ':title'       => $t['title'],
                 ':description' => $t['description'],
                 ':status'      => $t['status'],
@@ -80,17 +80,18 @@ switch ($table) {
         echo "Tasks seeded.\n";
         break;
 
-    case 'meetingusers':
+    case 'meeting_users':
         echo "Seeding meeting_users…\n";
-        $data = require DUMMIES_PATH . '/meetingusers.staticData.php';
+        $data = require DUMMIES_PATH . '/meeting_users.staticData.php';
         $stmt = $pdo->prepare("
-            INSERT INTO meetingusers (role, status)
-            VALUES (:role, :status)
+            INSERT INTO meeting_users (meeting_id, user_id, role)
+            VALUES (:meeting_id, :user_id, :role)
         ");
         foreach ($data as $mu) {
             $stmt->execute([
-                ':role'  => $mu['role'],
-                ':status'     => $mu['status'],
+                ':meeting_id'  => $mu['meeting_id'],
+                ':user_id'     => $mu['user_id'],
+                ':role'        => $mu['role'],
             ]);
         }
         echo "Meeting users seeded.\n";
@@ -98,9 +99,9 @@ switch ($table) {
 
     case 'all':
         $argv[1] = 'users';          require __FILE__;
-        $argv[1] = 'project_users';       require __FILE__;
+        $argv[1] = 'meetings';       require __FILE__;
         $argv[1] = 'tasks';          require __FILE__;
-        $argv[1] = 'meetingusers';  require __FILE__;
+        $argv[1] = 'meeting_users';  require __FILE__;
         break;
 
     default:
