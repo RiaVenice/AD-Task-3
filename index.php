@@ -10,8 +10,8 @@ renderMainLayout(
         ?>
         <section class="hero">
             <div class="hero-content">
-                <h1>Welcome to Meeting Calendar!</h1>
-                <p>Manage your meetings and maximize your productivity.</p>
+                <h1>Welcome to Your Meeting Calendar!</h1>
+                <p>✨An organized calendar is an organized productive day✨</p>
             </div>
         </section>
 
