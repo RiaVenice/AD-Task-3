@@ -15,6 +15,6 @@ if (!$dbconn) {
     echo "❌ Connection Failed: ", pg_last_error() . "  <br>";
     exit();
 } else {
-    echo "✔️ PostgreSQL Connection  <br>";
+    //echo "✔️ PostgreSQL Connection  <br>";
     pg_close($dbconn);
 }
