@@ -9,7 +9,7 @@ function navHeader(array $navItems, ?array $user): void
         header {
             background-color: #fff;
             padding: 1rem 2rem;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         .navbar {
