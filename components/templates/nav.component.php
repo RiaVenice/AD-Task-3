@@ -48,6 +48,7 @@ function navHeader(array $navItems, ?array $user): void
         .nav-right span {
             font-weight: 500;
             color: #222;
+            margin-right: 1.5rem;
         }
     </style>
 
