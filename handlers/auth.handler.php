@@ -24,10 +24,11 @@ $action = $_POST['action'] ?? $_GET['action'] ?? null;
 if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $usernameInput = trim($_POST['username'] ?? '');
     $passwordInput = trim($_POST['password'] ?? '');
+
     if (Auth::login($pdo, $usernameInput, $passwordInput)) {
         $user = Auth::user();
 
-        if ($user["role"] == "team lead") {
+        if ($user["role"] === "team lead") {
             header('Location: /pages/users/index.php');
         } else {
             header('Location: /index.php');
@@ -39,14 +40,65 @@ if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// --- SIGNUP ---
+elseif ($action === 'signup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username     = trim($_POST['username'] ?? '');
+    $firstName    = trim($_POST['firstname'] ?? '');
+    $middleName   = trim($_POST['middlename'] ?? '');
+    $lastName     = trim($_POST['lastname'] ?? '');
+    $password     = trim($_POST['password'] ?? '');
+    $confirm      = trim($_POST['confirm_password'] ?? '');
+    $role         = trim($_POST['role'] ?? '');
+
+    // Validate required fields
+    if (empty($username) || empty($firstName) || empty($lastName) || empty($password) || empty($role)) {
+        header("Location: /pages/signup/index.php?error=Please%fill%in%all%required%fields");
+        exit;
+    }
+
+    // Check if passwords match
+    if ($password !== $confirm) {
+        header("Location: /pages/signup/index.php?error=Passwords%do%not%match");
+        exit;
+    }
+
+    // Check if username already exists
+    $stmt = $pdo->prepare("SELECT 1 FROM users WHERE username = :username");
+    $stmt->execute(['username' => $username]);
+
+    if ($stmt->fetch()) {
+        header("Location: /pages/signup/index.php?error=Username%already%exists");
+        exit;
+    }
+
+    // Insert user into DB
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt = $pdo->prepare("
+        INSERT INTO users (first_name, middle_name, last_name, password, username, role)
+        VALUES (:first_name, :middle_name, :last_name, :password, :username, :role)
+    ");
+
+    $stmt->execute([
+        'first_name'  => $firstName,
+        'middle_name' => $middleName,
+        'last_name'   => $lastName,
+        'password'    => $hashedPassword,
+        'username'    => $username,
+        'role'        => $role
+    ]);
+
+    header("Location: /pages/login/index.php?message=Account%created%successfully");
+    exit;
+}
+
 // --- LOGOUT ---
 elseif ($action === 'logout') {
-    Auth::init();
     Auth::logout();
     header('Location: /pages/login/index.php');
     exit;
 }
 
-// If no valid action, redirect to login
+// --- INVALID ACTION ---
 header('Location: /pages/login/index.php');
 exit;
