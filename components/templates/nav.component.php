@@ -24,7 +24,7 @@ function navHeader(array $navItems, ?array $user): void
             font-size: 1rem;
             font-weight: 700;
             text-decoration: none;
-            color: #d6336c;
+            color: #34699A;
         }
 
         .nav-right {
@@ -42,7 +42,7 @@ function navHeader(array $navItems, ?array $user): void
         }
 
         .nav-right a:hover {
-            color: #d6336c;
+            color: #34699A;
         }
 
         .nav-right span {
