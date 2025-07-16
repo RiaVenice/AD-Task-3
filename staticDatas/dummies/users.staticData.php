@@ -6,7 +6,7 @@ return [
         'first_name' => 'Venice',
         'middle_name' => null,
         'last_name' => 'Cruz',
-        'password' => 'p@ssW0rd5678',
+        'password' => 'password1',
         'role' => 'team lead'
     ],
     [
@@ -14,7 +14,7 @@ return [
         'first_name' => 'Roma',
         'middle_name' => null,
         'last_name' => 'Papa',
-        'password' => 'p@ssW0rd1234',
+        'password' => 'password2',
         'role' => 'designer'
     ],
     [
@@ -22,7 +22,7 @@ return [
         'first_name' => 'Hirono',
         'middle_name' => null,
         'last_name' => 'Summerbreak',
-        'password' => 'p@ssW0rd9876',
+        'password' => 'password3',
         'role' => 'back end'
     ],
 ];
