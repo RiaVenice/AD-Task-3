@@ -21,7 +21,7 @@ function navHeader(array $navItems, ?array $user): void
         }
 
         .nav-left a {
-            font-size: 1rem;
+            font-size: 1.3rem;
             font-weight: 700;
             text-decoration: none;
             color: #34699A;
@@ -34,7 +34,7 @@ function navHeader(array $navItems, ?array $user): void
         }
 
         .nav-right a {
-            font-size: 1rem;
+            font-size: 1.4rem;
             text-decoration: none;
             color: #333;
             font-weight: 700;
