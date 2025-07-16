@@ -54,9 +54,9 @@ renderMainLayout(
                 <input type="hidden" name="action" value="login">
                 <button type="submit" class="button">Log In</button>
             </form>
-            <div class="signup-link" style="text-align:center; margin-top: 1rem;">
+            <div class="signup-link">
                 <p>Don't have an account?
-                    <a href="/pages/signup/index.php" style="color: #4caf50; font-weight: bold;">Sign up</a>
+                <a href="/pages/signup/index.php">Sign up</a>
                 </p>
             </div>
         </div>
