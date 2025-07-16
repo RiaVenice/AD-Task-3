@@ -54,7 +54,7 @@ function navHeader(array $navItems, ?array $user): void
     <header>
         <nav class="navbar">
             <div class="nav-left">
-                <a href="../index.php">Meeting Calendar</a>
+                <a href="/index.php">Meeting Calendar</a>
             </div>
             <div class="nav-right">
                 <?php if ($user): ?>

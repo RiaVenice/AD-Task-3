@@ -38,7 +38,7 @@ renderMainLayout(
     $title,
     [
         'css' => [
-            './assets/css/home.css'
+            '/assets/css/home.css'
         ]
     ]
 );
